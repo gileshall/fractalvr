@@ -20,7 +20,7 @@ import { dd, ddAddD, ddToString } from './dd.js';
 import { TOOLS, BACKGROUNDS, BallGun, Bookmarks } from './tools.js';
 import { HeadTrace, HeadMotion } from './diag.js';
 import { checkBuild } from './fresh.js';
-import { REPORTS, STORED_TO, store, startEdition } from './edition.js';
+import { REPORTS, STORED_TO, store, load, startEdition } from './edition.js';
 import { Pilot } from './pilot.js';
 import { LEG, LEG_FLOOR, LEG_LOST, TOUR_RATE, TOUR_SPIN, JULIA_FLOOR, fly, face, frontOf, boundaryPoint, stops, Playlist } from './tour.js';
 import { tune, createMotion, stepMotion, headFrom, coverSeconds, dropWithin, planSize, planView, CYCLE_MAX } from './imageplan.js';
@@ -2278,9 +2278,7 @@ window.fv = {
   headSim: (opts = {}) => headMotion.simulate(opts),
   // Reproduce a saved report: its view, state and recorded head motion.
   loadReport: async (name) => {
-    const r = await fetch(`/shots/${name}.json`);
-    if (!r.ok) throw new Error(`no report ${name} (${r.status})`);
-    const d = await r.json();
+    const d = await load(name);
     restoreBookmark(d.bookmark);
     headMotion.play(d.trace);
     return d;
@@ -2303,7 +2301,7 @@ function saveShot(s) {
     n++;
   }
   const detail = sum / n;
-  fetch(`/__shot?name=${s.name}`, { method: 'POST', body: c.toDataURL('image/jpeg', 0.9) }).then((r) => r.text()).then((file) => s.res({ file, detail, data: d, w: s.w, h: s.h }), s.rej);
+  store(s.name, c.toDataURL('image/jpeg', 0.9)).then((file) => s.res({ file, detail, data: d, w: s.w, h: s.h }), s.rej);
 }
 
 // The 2D plane's part of a telemetry frame; null in 3D.

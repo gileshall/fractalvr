@@ -18,6 +18,11 @@ export function store(name, body) {
   return Promise.resolve(file);
 }
 
+// A report kept earlier, by name. This edition keeps reports as downloads, so it has none to load.
+export async function load(name) {
+  throw new Error(`no report ${name}: this edition saves reports as downloads and cannot load them`);
+}
+
 // Starts what this edition runs beside the app; resolves to the telemetry handle, or null.
 export function startEdition() {
   return Promise.resolve(null);
