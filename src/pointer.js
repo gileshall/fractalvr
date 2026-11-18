@@ -103,7 +103,7 @@ export class Pointers {
       line.quaternion.identity();
       line.scale.z = drag ? drag.dist : 0.25;
       if (aim && !drag) {
-        const to = ray.worldToLocal(aim.panel.mesh.localToWorld(this._v.set((aim.x / aim.panel.canvas.width - 0.5) * aim.panel.meters, (0.5 - aim.y / aim.panel.canvas.height) * aim.panel.metersH, 0)));
+        const to = ray.worldToLocal(aim.panel.mesh.localToWorld(this._v.set((aim.x / aim.panel.width - 0.5) * aim.panel.meters, (0.5 - aim.y / aim.panel.height) * aim.panel.metersH, 0)));
         line.scale.z = to.length();
         line.quaternion.setFromUnitVectors(FORWARD, to.normalize());
       }
@@ -121,14 +121,14 @@ export class Pointers {
     }
   }
 
-  // Where the ray meets a window's plane, in its canvas pixels (on the window or off it).
+  // Where the ray meets a window's plane, in its layout pixels (on the window or off it).
   onPlane(panel) {
     this._n.set(0, 0, 1).applyQuaternion(panel.mesh.getWorldQuaternion(this._q));
     this._plane.setFromNormalAndCoplanarPoint(this._n, panel.mesh.getWorldPosition(this._v));
     const pt = this.raycaster.ray.intersectPlane(this._plane, this._pt);
     if (!pt) return null;
     panel.mesh.worldToLocal(pt);
-    return [(pt.x / panel.meters + 0.5) * panel.canvas.width, (0.5 - pt.y / panel.metersH) * panel.canvas.height];
+    return [(pt.x / panel.meters + 0.5) * panel.width, (0.5 - pt.y / panel.metersH) * panel.height];
   }
 
   // How far outside the nearest window the ray passes, in room metres.
@@ -138,7 +138,7 @@ export class Pointers {
       if (!p.mesh.visible) continue;
       const at = this.onPlane(p);
       if (!at) continue;
-      const W = p.canvas.width, H = p.canvas.height;
+      const W = p.width, H = p.height;
       const dx = Math.max(0, -at[0], at[0] - W) * p.meters / W, dy = Math.max(0, -at[1], at[1] - H) * p.metersH / H;
       least = Math.min(least, Math.hypot(dx, dy));
     }
@@ -173,17 +173,17 @@ export class Pointers {
     if (steady) {
       if (this.on[id] !== panel) steady.reset();
       const far = hit ? hit.distance / this.rig.scale : 1;
-      at = steady.update({ at, value: trigger.value, pressed: trigger.pressed, stray: panel ? STRAY * far / panel.meters * panel.canvas.width : 0, dt });
+      at = steady.update({ at, value: trigger.value, pressed: trigger.pressed, stray: panel ? STRAY * far / panel.meters * panel.width : 0, dt });
     }
     const prev = this.on[id];
     if (prev && prev !== panel) { prev.pointerLeave(id); prev.pointerUp(id); }
     this.on[id] = panel;
-    const inside = !!at && at[0] >= 0 && at[0] <= panel.canvas.width && at[1] >= 0 && at[1] <= panel.canvas.height;
+    const inside = !!at && at[0] >= 0 && at[0] <= panel.width && at[1] >= 0 && at[1] <= panel.height;
     this.aim[id] = inside ? { panel, x: at[0], y: at[1] } : null;
     if (!panel) return;
     if (inside) {
       const [x, y] = at;
-      panel.showCursor(id, { x: x / panel.canvas.width, y: y / panel.canvas.height });
+      panel.showCursor(id, { x: x / panel.width, y: y / panel.height });
       panel.pointerMove(id, x, y);
       if (trigger.down) {
         const what = panel.pointerDown(id, x, y);
@@ -205,14 +205,14 @@ export class Pointers {
     return false;
   }
 
-  // px: the point of the window taken hold of, in its canvas pixels.
+  // px: the point of the window taken hold of, in its layout pixels.
   startDrag(id, panel, px, button) {
     panel.pointerUp(id);
     panel.pointerLeave(id);
     this.hover[id] = null;
     this.aim[id] = null;
     this.on[id] = null;
-    const offset = new THREE.Vector3((px[0] / panel.canvas.width - 0.5) * panel.meters, (0.5 - px[1] / panel.canvas.height) * panel.metersH, 0);
+    const offset = new THREE.Vector3((px[0] / panel.width - 0.5) * panel.meters, (0.5 - px[1] / panel.height) * panel.metersH, 0);
     const far = panel.mesh.localToWorld(this._v.copy(offset)).distanceTo(this.raycaster.ray.origin);
     // Distance in room metres so zooming during the drag does not move the window.
     this.drag[id] = { panel, dist: far / this.rig.scale, offset, button };

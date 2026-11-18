@@ -1,6 +1,6 @@
 {
   "name": "fractalvr",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Fly through fractals in your browser or in a VR headset (WebXR).",
   "license": "AGPL-3.0-only",
   "author": "Giles Hall",

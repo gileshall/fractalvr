@@ -6,7 +6,7 @@ import { TOOLS, BACKGROUNDS } from './tools.js';
 
 // Builds the main window. `app` supplies actions and live readouts.
 export function buildMenu(app, upload) {
-  const panel = new Panel({ title: 'fractalvr', width: 800, height: 1360, meters: 0.6, upload });
+  const panel = new Panel({ title: 'FractalVR', brand: true, note: 'open source: github.com/gileshall/fractalvr', width: 800, height: 1360, meters: 0.6, upload });
   panel.onClose = () => app.togglePanel(false);
 
   const slider = (text, key, min, max, step, opts = {}) => ({
@@ -126,7 +126,14 @@ export function buildMenu(app, upload) {
 
   const infoTab = () => [
     { type: 'text', lines: () => app.describe() },
-    { type: 'label', text: 'controls' },
+    { type: 'label', text: 'controls on a desktop' },
+    { type: 'text', lines: () => [
+      'Tab: this menu   click: look around (Esc lets go)',
+      'WASD: fly   Q/E: down / up   Shift: faster',
+      'scroll or Z/X: zoom   arrows: turn   C: palette',
+      'N/P: fractal  T: tool  F: cruise  O: tour  R: reset',
+    ] },
+    { type: 'label', text: 'controls in a headset' },
     { type: 'text', lines: () => [
       'L trigger: use tool   R trigger: quick menu',
       'L grip: hold the fractal, turn and move it by hand',
@@ -135,15 +142,32 @@ export function buildMenu(app, upload) {
       'L stick click: hold and twist to turn the colours,',
       '  let go turning to spin them; tap: spin on / off',
       'A+B: cruise on / off, A/B or the stick its speed',
-      'tour (quick menu actions, Move tab): a cruise that steers',
-      '  itself from place to place; turn stick: next / last,',
-      '  zoom: its speed; A+B or flying ends it',
+      'tour (quick menu actions, Move tab): a cruise that',
+      '  steers itself from place to place; turn stick:',
+      '  next / last, zoom: its speed; A+B or flying ends it',
       'sticks: fly (standard or heli mode 2)',
       'stick on a slider: fine adjust',
     ] },
     { type: 'label', text: 'settings' },
     { type: 'text', lines: () => app.describeSettings() },
     { type: 'button', text: 'all settings as they come', onClick: () => app.defaultSettings() },
+  ];
+
+  const aboutTab = () => [
+    { type: 'heading', text: 'Trip the recursive fantastic.' },
+    { type: 'text', prose: true, lines: () => ['Fly through fractals in your browser or in a VR headset.', 'fractalvr.org'] },
+    { type: 'label', text: 'open source' },
+    { type: 'text', prose: true, lines: () => [
+      'FractalVR is free software under the GNU Affero General',
+      'Public License, version 3: use it, change it, share it.',
+      'github.com/gileshall/fractalvr',
+    ] },
+    { type: 'label', text: 'version' },
+    { type: 'text', lines: () => app.version() },
+    { type: 'label', text: 'built with' },
+    { type: 'text', prose: true, lines: () => ['three.js (MIT License)', 'Space Grotesk and Space Mono (SIL Open Font License 1.1)'] },
+    { type: 'label', text: 'copyright' },
+    { type: 'text', prose: true, lines: () => ['\u00a9 2026 Giles Hall'] },
   ];
 
   panel.setTabs([
@@ -154,6 +178,7 @@ export function buildMenu(app, upload) {
     { name: 'Render', widgets: renderTab },
     { name: 'Tools', widgets: toolsTab },
     { name: 'Info', widgets: infoTab },
+    { name: 'About', widgets: aboutTab },
   ]);
   return panel;
 }

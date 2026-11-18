@@ -28,9 +28,14 @@ npm run build
 
 ## Controls
 
-On a desktop: Tab opens the menu, click to look around, WASD and Q/E fly, Shift goes faster, the scroll wheel or Z/X zooms, N/P changes fractal, C changes palette. The page lists the rest.
+On a desktop: Tab opens the menu, click to look around (Esc lets go), WASD flies, Q/E go down and up, Shift goes faster, the scroll wheel or Z/X zooms, N/P changes fractal, C changes palette. The menu's Info tab lists the rest.
 
-In VR: the sticks fly, turn and zoom; the left grip opens the quick menu and Y the full one.
+In VR: the left stick flies and the right one turns and zooms. Hold the right trigger for the quick menu of tools, fractals and palettes; Y opens the full menu, with a map of every control beside it.
+
+<p>
+  <img src="docs/menu.png" height="460" alt="The FractalVR menu, open on its Fractal tab: every fractal to choose from, and the chosen one's parameters">
+  <img src="docs/controls.png" height="460" alt="The controls map: what each stick, button, trigger and grip does on the left and right controllers">
+</p>
 
 ## Requirements
 
@@ -40,4 +45,4 @@ A browser with WebGL2 and `EXT_color_buffer_float`. VR needs a WebXR headset and
 
 Copyright (C) 2026 Giles Hall.
 
-FractalVR is free software under the GNU Affero General Public License, version 3 only. See [LICENSE](LICENSE). It bundles [three.js](https://threejs.org), under the MIT license.
+FractalVR is free software under the GNU Affero General Public License, version 3 only. See [LICENSE](LICENSE). It bundles [three.js](https://threejs.org), under the MIT license, and the Space Grotesk and Space Mono typefaces, under the SIL Open Font License 1.1 (see `public/fonts`).

@@ -13,21 +13,23 @@
       background: rgba(0,0,0,.5); border-radius: 6px; pointer-events: none;
     }
     #help {
-      position: fixed; right: 12px; top: 12px; padding: 8px 12px; max-width: 420px;
-      font: 12px/1.5 ui-monospace, monospace; color: #aab; white-space: pre;
-      background: rgba(0,0,0,.5); border-radius: 6px; pointer-events: none;
+      position: fixed; right: 12px; top: 12px; padding: 10px 14px;
+      font: 13px/1.6 ui-monospace, monospace; color: #c4c8d8; white-space: pre;
+      background: rgba(0,0,0,.55); border-radius: 6px; pointer-events: none;
+      transition: opacity 1.5s;
     }
+    #help.gone { opacity: 0; }
+    #help b { color: #fff; font-weight: normal; }
+    #help a { color: #8fa8ff; pointer-events: auto; }
   </style>
 </head>
 <body>
-  <div id="help">desktop: Tab menu (mouse), click to look, WASD/QE fly,
-shift boost, scroll or Z/X zoom, arrows turn, T teleport,
-N/P fractal, C palette, F fall, R reset/recenter
+  <div id="help"><b>Tab</b>    menu: more fractals, colors, settings
+<b>N / P</b>  next / previous fractal
+<b>click</b>  look around (Esc lets go)
+<b>WASD</b>   fly, scroll to zoom
 
-VR:  sticks fly / turn / zoom, A/B zoom
-     L trigger use tool, R trigger pick tool
-     L grip quick menu, R grip sculpt
-     Y menu, X reset, L stick click save report</div>
+Open source: <a href="https://github.com/gileshall/fractalvr" target="_blank" rel="noopener">github.com/gileshall/fractalvr</a></div>
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

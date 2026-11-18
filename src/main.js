@@ -13,13 +13,15 @@ import { View2D, SCALE2D_MIN, SCALE2D_MAX } from './view2d.js';
 import { Input } from './input.js';
 import { Pointers } from './pointer.js';
 import { buildMenu } from './menu.js';
-import { Hud, ControlsPanel, HandLabel, ListPanel, overlayMaterial, OVERLAY_ORDER } from './ui.js';
+import { Hud, ControlsPanel, HandLabel, ListPanel, overlayMaterial, OVERLAY_ORDER, loadFonts } from './ui.js';
+import { version } from '../package.json';
 import { PlaneCache } from './plane.js';
 import { Readback } from './readback.js';
 import { dd, ddAddD, ddToString } from './dd.js';
 import { TOOLS, BACKGROUNDS, BallGun, Bookmarks } from './tools.js';
 import { HeadTrace, HeadMotion } from './diag.js';
 import { checkBuild } from './fresh.js';
+import { startHint } from './hint.js';
 import { REPORTS, STORED_TO, store, load, startEdition } from './edition.js';
 import { Pilot } from './pilot.js';
 import { LEG, LEG_FLOOR, LEG_LOST, TOUR_RATE, TOUR_SPIN, JULIA_FLOOR, fly, face, frontOf, boundaryPoint, stops, Playlist } from './tour.js';
@@ -838,7 +840,9 @@ function tagControllerModels() {
   }
 }
 
+loadFonts(import.meta.env.BASE_URL).catch((e) => console.error('the brand faces did not load; the windows stay blank', e));
 const hud = new Hud();
+const hint = startHint();
 rig.camera.add(hud.mesh);
 const handLabels = { left: new HandLabel() };
 const controls = new ControlsPanel();
@@ -918,7 +922,7 @@ const app = {
     dbg?.event('menu', { open: state.panelOpen });
     panel.mesh.visible = state.panelOpen;
     controls.mesh.visible = state.panelOpen && state.controlsOpen;
-    if (state.panelOpen) placePanels();
+    if (state.panelOpen) { placePanels(); hint.fade(); }
   },
   selectFractal(i) {
     setFractal(i);
@@ -937,6 +941,7 @@ const app = {
     state.fall = false;
   },
   tour() { if (tour.on) endTour('asked'); else startTour(); },
+  version() { return [`${version}   build ${__BUILD__.sha}${__BUILD__.dirty ? ' (modified)' : ''}`]; },
   describeSettings() {
     const n = kept().length;
     return ['how you fly and turn, the light, palette, 2D layout,', 'background and where the windows sit stay as you set', `them between visits: ${n ? `${n} kept` : 'none yet'}`];

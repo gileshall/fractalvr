@@ -41,6 +41,8 @@ export class Input {
     this.keys = new Set();
     this.keyEdges = new Set();
     addEventListener('keydown', (e) => {
+      // Tab is the menu, not the browser's focus walk (which ends in the address bar).
+      if (e.code === 'Tab') e.preventDefault();
       if (e.repeat) return;
       this.keys.add(e.code);
       this.keyEdges.add(e.code);
